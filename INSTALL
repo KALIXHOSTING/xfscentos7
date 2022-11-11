@@ -1,0 +1,145 @@
+LAMP CENTOS 7 XFS
+
+
+
+
+———-000TRANSMISSION000———
+
+yum install epel-release
+
+yum -y update
+
+
+yum install transmission-cli transmission-common transmission-daemon
+
+systemctl start transmission-daemon.service
+
+If Edit Port needed on other installs 
+
+
+
+
+
+———-000LAMP000———
+
+
+
+rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+
+rpm -Uvh http://repo.mysql.com/mysql-community-release-el7-7.noarch.rpm
+
+
+yum --enablerepo=remi-php74 install php
+
+
+
+yum --enablerepo=remi-php74 install php-mysql php-xml php-soap php-xmlrpc php-mbstring php-json php-gd php-mcrypt php-process php-zip php-devel php-bcmath php-tidy php-
+
+
+
+yum --enablerepo=epel,remi install httpd
+
+
+systemctl start httpd.service
+
+
+systemctl enable httpd.service
+
+
+yum install mysql-server
+
+
+systemctl start mysqld.service
+
+
+mysql_secure_installation
+
+
+systemctl restart mysqld.service
+
+
+firewall-cmd --permanent --zone=public --add-service=http
+
+
+firewall-cmd --permanent --zone=public --add-service=https
+
+
+firewall-cmd --reload
+
+yum -y install nano 
+
+
+nano /var/www/cgi-bin/php.fastcgi
+
+chown apache:apache /var/www/cgi-bin/php.fastcgi
+
+
+
+chmod +x /var/www/cgi-bin/php.fastcgi
+
+/etc/httpd/conf.d/domain.com.conf 
+
+
+<VirtualHost *:80>
+ServerName upfiles.cloud
+ServerAdmin support@upfiles.cloud
+DocumentRoot /var/www/htdocs
+ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
+<Directory "/var/www/html">
+Options +Indexes +FollowSymLinks +ExecCGI
+AddHandler php-fastcgi .php
+Action php-fastcgi /cgi-bin/php.fastcgi
+AllowOverride All
+Order allow,deny
+Allow from All
+</Directory>
+</VirtualHost>
+
+
+
+mkdir -p /var/www/htdocs
+
+
+service httpd restart
+
+
+nano /var/www/htdocs/info.php
+
+
+sudo yum install phpmyadmin
+
+
+nano. /etc/httpd/conf.d/phpMyAdmin.conf
+
+
+Change required ip and allow from all 
+
+
+systemctl restart httpd
+
+
+sudo yum install certbot python2-certbot-apache mod_ssl
+
+sudo certbot --apache -d 
+
+yum install perl-CGI perl-libwww-perl perl-DBI perl-DBD-MySQL perl-GD perl-Cache-Memcached perl-Digest-SHA perl-LWP-Protocol-https
+
+
+
+nano /etc/httpd/conf/httpd.conf
+
+Change 
+<Directory /var/www/html>
+To 
+
+<Directory /var/www/htdocs>
+
+Then 
+ AllowOverride None
+
+To
+
+ AllowOverride All
+
+systemctl restart httpd
+
